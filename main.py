@@ -62,20 +62,21 @@ def line_detect(x):
             if(i>=2 and i<len(output)-2): 
                 final_output.append(output[i])
         croping(final_output,number)
+        
+count=1;
 
 def croping(output,i):
     im = Image.open(r"./Page_Image/page_"+str(i)+".png")
-    index=1
+   
     for j in range(len(output)-1):
         left = output[j][0]  
         right = output[j][2]
         top=output[j][1]
         bottom=output[j+1][1]
         im1 = im.crop((left, top, right, bottom))
-        im1 = im1.save("./Crop_Image/crop_" + str(i)+"_"+str(index)+".png")
-        index=index+1
-
-
+        global count
+        im1 = im1.save("./Crop_Image/crop_"+str(count)+".png")
+        count=count+1;
 
 
 if __name__ == "__main__":
