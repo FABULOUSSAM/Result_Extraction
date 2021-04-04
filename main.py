@@ -6,6 +6,7 @@ from pdf2image import convert_from_path
 import os,os.path
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 PDF_PATH = "1T00718C.pdf"
 DPI = 200
@@ -26,7 +27,7 @@ def pdftopil():
 def save_images(pil_images):
     index = 1
     for image in pil_images:
-        image.save("./Page_Image/page_" + str(index) + ".png")
+        image.save("./Page_Image/page_" + str(index) + ".png",quality=100)
         index += 1
 
 def line_detect(x):
