@@ -6,7 +6,11 @@ from pdf2image import convert_from_path
 import os,os.path
 import cv2
 import numpy as np
+<<<<<<< HEAD
 import matplotlib.pyplot as plt
+=======
+import easyocr 
+>>>>>>> refs/remotes/origin/master
 
 PDF_PATH = "1T00718C.pdf"
 DPI = 200
@@ -63,6 +67,8 @@ def line_detect(x):
             if(i>=2 and i<len(output)-2): 
                 final_output.append(output[i])
         croping(final_output,number)
+
+       
         
 count=1;
 
