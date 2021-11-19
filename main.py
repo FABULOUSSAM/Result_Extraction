@@ -1,22 +1,20 @@
 
-import pdf2image
-from PIL import Image
+import os
+import os.path
 import time
-from pdf2image import convert_from_path
-import os,os.path
-import cv2
-import numpy as np
-<<<<<<< HEAD
-import matplotlib.pyplot as plt
-=======
-import easyocr 
->>>>>>> refs/remotes/origin/master
 
-PDF_PATH = "1T00718C.pdf"
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+import pdf2image
+from pdf2image import convert_from_path
+from PIL import Image, ImageEnhance
+
+PDF_PATH = "./1T00718C.pdf"
 DPI = 200
 OUTPUT_FOLDER ="Page_Image"
 FIRST_PAGE = 1
-LAST_PAGE = 5
+LAST_PAGE = 45
 FORMAT = 'jpg'
 THREAD_COUNT = 1
 USERPWD = None
@@ -31,7 +29,7 @@ def pdftopil():
 def save_images(pil_images):
     index = 1
     for image in pil_images:
-        image.save("./Page_Image/page_" + str(index) + ".png",quality=100)
+        image.save("./Page_Image/page_" + str(index) + ".png",quality=150)
         index += 1
 
 def line_detect(x):
@@ -62,16 +60,20 @@ def line_detect(x):
             for j in range(0, n-i-1):
                 if output[j][1] > output[j+1][1] :
                     output[j], output[j+1] = output[j+1], output[j]
+        pre_output=[]
         final_output=[]
         for i in range(0,len(output)):
             if(i>=2 and i<len(output)-2): 
                 final_output.append(output[i])
+            if i <= 2:
+                pre_output.append(output[i])
         croping(final_output,number)
+    head_croping(pre_output,number)
 
        
         
 count=1;
-
+count1=1
 def croping(output,i):
     im = Image.open(r"./Page_Image/page_"+str(i)+".png")
    
@@ -82,13 +84,30 @@ def croping(output,i):
         bottom=output[j+1][1]
         im1 = im.crop((left, top, right, bottom))
         global count
-        im1 = im1.save("./Crop_Image/crop_"+str(count)+".png")
+        im1 = im1.save("./Crop_Image/crop_"+str(count)+".png",quality=150)
         count=count+1;
+
+def head_croping(output,i):
+    im = Image.open(r"./Page_Image/page_1.png")
+    for j in range(len(output)-1):
+        left = output[j][0]
+        right = output[j][2]
+        top=output[j][1]
+        bottom=output[j+1][1]
+        im1 = im.crop((left, top, right, bottom))
+        global count1
+        im1 = im1.save("./Header_crop/crop"+str(count1)+".png",quality=150)
+        count1=count1+1;
+
 
 
 if __name__ == "__main__":
     pil_images = pdftopil()
     save_images(pil_images)
     DIR = './Page_Image'
+    begin = time.time()
     x=len([name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))])
+    print(x)
     line_detect(x)
+    end = time.time()
+    print("Total Time Taken :",end-begin)
